@@ -1,0 +1,329 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    " grid = [[5,3,0,0,7,0,0,0,0,],\n",
+    "        [6,0,0,1,9,5,0,0,0],\n",
+    "        [0,9,8,0,0,0,0,6,0],\n",
+    "        [8,0,0,0,6,0,0,0,3],\n",
+    "        [4,0,0,8,0,3,0,0,1],\n",
+    "        [7,0,0,0,2,0,0,0,6],\n",
+    "        [0,6,0,0,0,0,2,8,0],\n",
+    "        [0,0,0,4,1,9,0,0,5],\n",
+    "        [0,0,0,0,8,0,0,7,9]]\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[5, 3, 0, 0, 7, 0, 0, 0, 0], [6, 0, 0, 1, 9, 5, 0, 0, 0], [0, 9, 8, 0, 0, 0, 0, 6, 0], [8, 0, 0, 0, 6, 0, 0, 0, 3], [4, 0, 0, 8, 0, 3, 0, 0, 1], [7, 0, 0, 0, 2, 0, 0, 0, 6], [0, 6, 0, 0, 0, 0, 2, 8, 0], [0, 0, 0, 4, 1, 9, 0, 0, 5], [0, 0, 0, 0, 8, 0, 0, 7, 9]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(grid)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[5 3 0 0 7 0 0 0 0]\n",
+      " [6 0 0 1 9 5 0 0 0]\n",
+      " [0 9 8 0 0 0 0 6 0]\n",
+      " [8 0 0 0 6 0 0 0 3]\n",
+      " [4 0 0 8 0 3 0 0 1]\n",
+      " [7 0 0 0 2 0 0 0 6]\n",
+      " [0 6 0 0 0 0 2 8 0]\n",
+      " [0 0 0 4 1 9 0 0 5]\n",
+      " [0 0 0 0 8 0 0 7 9]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "print(np.matrix(grid))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def possible(y,x,n):\n",
+    "        global grid\n",
+    "        for i in range(0,9):\n",
+    "            if grid[y][i] == n :\n",
+    "                return False\n",
+    "        for i in range(0,9):\n",
+    "            if grid[i][x] == n:\n",
+    "                return False\n",
+    "        x0 = (x//3)*3\n",
+    "        y0 = (y//3)*3\n",
+    "        for i in range(0,3):\n",
+    "            for j in range(0,3):\n",
+    "                if grid[y0+i][x0+j] ==n:\n",
+    "                    return False\n",
+    "            return True"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "False"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#possible(4,4,3)\n",
+    "possible(8,2,9)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "possible(4,4,5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def solve():\n",
+    "    global grid\n",
+    "    for y in range(9):\n",
+    "        for x in range(9):\n",
+    "            if grid[y][x] == 0:\n",
+    "                for n in range(1,10):\n",
+    "                    if possible(y,x,n):\n",
+    "                        grid[y][x] = n\n",
+    "                        #print(np.matrix(grid))\n",
+    "                        solve()\n",
+    "                        grid[y][x] = 0\n",
+    "                return\n",
+    "    print(np.matrix(grid))\n",
+    "    input(\"More?\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[5 3 4 6 7 8 9 1 2]\n",
+      " [6 7 2 1 9 5 3 4 8]\n",
+      " [1 9 8 3 4 2 5 6 7]\n",
+      " [8 5 9 7 6 1 4 2 3]\n",
+      " [4 2 6 8 5 3 7 9 1]\n",
+      " [7 1 3 9 2 4 8 5 6]\n",
+      " [9 6 1 5 3 7 2 8 4]\n",
+      " [2 8 7 4 1 9 6 3 5]\n",
+      " [3 4 5 2 8 6 1 7 9]]\n",
+      "More?\n"
+     ]
+    }
+   ],
+   "source": [
+    "solve()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Above is a brute force approach, can we attempt a more human like solution?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "530 | 070 | 000\n",
+      "600 | 195 | 000\n",
+      "098 | 000 | 060\n",
+      "- - - - - - - - - -\n",
+      "800 | 060 | 003\n",
+      "400 | 803 | 001\n",
+      "700 | 020 | 006\n",
+      "- - - - - - - - - -\n",
+      "060 | 000 | 280\n",
+      "000 | 419 | 005\n",
+      "000 | 080 | 079\n"
+     ]
+    }
+   ],
+   "source": [
+    "def printgrid(gr = grid):\n",
+    "    \"\"\"\n",
+    "    print the board\n",
+    "    :param grid: the global grid\n",
+    "    :return: printed formatted grid\n",
+    "    \"\"\"\n",
+    "    for i in range(0,9):\n",
+    "        if i % 3 == 0 and i != 0:\n",
+    "            print(\"- - - - - - - - - -\")\n",
+    "        for j in range(0,9):\n",
+    "            if j % 3 ==0 and j != 0:\n",
+    "                print(\" | \", end =\"\")\n",
+    "            if j ==8:\n",
+    "                print(gr[i][j], end= \"\\n\")\n",
+    "            else:\n",
+    "                print(str(gr[i][j]), end = \"\")\n",
+    "    \n",
+    "printgrid()\n",
+    "#print(np.matrix(grid)) #same grid as above"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 68,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# use possible from above\n",
+    "def human_solve1(): #loop through numbers and find unique spots\n",
+    "    global grid\n",
+    "    for y in range(0,9):\n",
+    "        for x in range(0,9):\n",
+    "            for n in range(1,10):\n",
+    "                #can i place a number here based off of rows and col with n?\n",
+    "                if grid[y][x] == 0 and possible(y,x,n): #if empty\n",
+    "                    x0 = (x//3)*3\n",
+    "                    y0 = (y//3)*3 #square coordinates\n",
+    "                    \n",
+    "                    if len(grid[y0].count(n) == 1 and )\n",
+    "                    print(x0)\n",
+    "                    print(y0)\n",
+    "                    #print(n)\n",
+    "                    \n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 93,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "list"
+      ]
+     },
+     "execution_count": 93,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "\n",
+    "grid[0:3]\n",
+    "type(grid)\n",
+    "#human_solve1()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 101,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "5"
+      ]
+     },
+     "execution_count": 101,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a = np.matrix(grid)\n",
+    "a[0,0]\n",
+    "\n",
+    "\n",
+    "#a.tolist()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3.6.7 64-bit ('py3': conda)",
+   "language": "python",
+   "name": "python36764bitpy3conda719eec3eb2624116b4e4c952678f202f"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
